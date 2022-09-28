@@ -38,7 +38,7 @@ export class User {
 
   @Column({ type: 'boolean', default: false })
   @IsBoolean()
-  isEmailActivated: boolean;
+  isEmailVerified: boolean;
 
   @CreateDateColumn()
   createDate: Date;
