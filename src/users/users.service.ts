@@ -59,6 +59,17 @@ export class UsersService {
     return user;
   }
 
+  async findOneByEmail(email: string) {
+    const user = await this.userRepo.findOne({
+      where: { email },
+    });
+
+    // throw 404 error id user is not found
+    if (!user) {
+      throw new NotFoundException(`user with email ${email} is not found`);
+    }
+    return user;
+  }
   async update(id: number, updateUserDto: UpdateUserDto) {
     const user = await this.findOne(id);
     if (!user) {

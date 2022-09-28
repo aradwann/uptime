@@ -13,6 +13,9 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 import { ApiNotFoundResponse, ApiTags } from '@nestjs/swagger';
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
+import { User } from './entities/user.entity';
+import { Public } from 'src/auth/decorators/public.decorator';
 
 @ApiTags('users')
 @Controller('users')
@@ -20,6 +23,7 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   // make this endpoint public aka functioning for unauthenticated users
+  @Public()
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
@@ -28,6 +32,11 @@ export class UsersController {
   @Get()
   findAll(@Query() paginationQuery: PaginationQueryDto) {
     return this.usersService.findAll(paginationQuery);
+  }
+
+  @Get('me')
+  getProfile(@CurrentUser() user: User) {
+    return user;
   }
 
   @ApiNotFoundResponse({ description: 'not found' })
