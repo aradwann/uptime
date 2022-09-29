@@ -6,8 +6,10 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   BeforeInsert,
+  OneToMany,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { UrlCheck } from 'src/url-checks/entities/url-check.entity';
 
 @Entity()
 export class User {
@@ -50,4 +52,7 @@ export class User {
   private async hashPassowrd() {
     this.password = await bcrypt.hash(this.password, 10);
   }
+
+  @OneToMany(() => UrlCheck, (urlCheck) => urlCheck.creator)
+  urlChecks: UrlCheck[];
 }

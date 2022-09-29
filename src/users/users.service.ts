@@ -5,7 +5,6 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { use } from 'passport';
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 import { EmailService } from 'src/email/email.service';
 import { Repository } from 'typeorm';
