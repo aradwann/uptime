@@ -1,32 +1,58 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
-
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+# Uptime
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+monitoring RESTful API server that allows authenticated users to monitor URLs, and get detailed uptime reports about their availability, average response time, and total uptime/downtime.
 
-## Installation
+## Overview
+
+- Signup with email verification.
+- CRUD operations for URL checks (`GET`, `PUT` and `DELETE` can be called only by the user user who created the check).
+- Authenticated users can receive a notification whenever one of their URLs goes down or up again:
+  - Email.
+  - Webhook *(optional)*.
+- Authenticated users can get detailed uptime reports about their URLs availability, average response time, and total uptime/downtime.
+- Authenticated users can group their checks by tags and get reports by tag.
+
+## Acceptance Criteria
+
+- APIs should be consuming and producing `application/json`.
+- Authenication should be stateless.
+- Each URL check may have the following options:
+  - `name`: The name of the check.
+  - `url`: The URL to be monitored.
+  - `protocol`: The resource protocol name `HTTP`, `HTTPS`, or `TCP`.
+  - `path`: A specific path to be monitored *(optional)*.
+  - `port`: The server port number *(optional)*.
+  - `webhook`: A webhook URL to receive a notification on *(optional)*.
+  - `timeout` *(defaults to 5 seconds)*: The timeout of the polling request *(optional)*.
+  - `interval` *(defaults to 10 minutes)*: The time interval for polling requests *(optional)*.
+  - `threshold` *(defaults to 1 failure)*: The threshold of failed requests that will create an alert *(optional)*.
+  - `authentication`: An HTTP authentication header, with the Basic scheme, to be sent with the polling request *(optional)*.
+    - `authentication.username`
+    - `authentication.password`
+  - `httpHeaders`: A list of key/value pairs custom HTTP headers to be sent with the polling request (optional).
+  - `assert`: The response assertion to be used on the polling response (optional).
+    - `assert.statusCode`: An HTTP status code to be asserted.
+  - `tags`: A list of the check tags (optional).
+  - `ignoreSSL`: A flag to ignore broken/expired SSL certificates in case of using the HTTPS protocol.
+- Each report may have the following information:
+  - `status`: The current status of the URL.
+  - `availability`: A percentage of the URL availability.
+  - `outages`: The total number of URL downtimes.
+  - `downtime`: The total time, in seconds, of the URL downtime.
+  - `uptime`: The total time, in seconds, of the URL uptime.
+  - `responseTime`: The average response time for the URL.
+  - `history`: Timestamped logs of the polling requests.
+
+
+## Installation via docker
+
+```bash
+$ docker-compose up
+```
+
+## Installation without docker
 
 ```bash
 $ npm install
@@ -58,16 +84,6 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-## Support
+## Swagger (OpenAPI) documentation 
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+accessed via the endpoint ` /api` 
