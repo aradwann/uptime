@@ -14,7 +14,12 @@ monitoring RESTful API server that allows authenticated users to monitor URLs, a
 - Authenticated users can get detailed uptime reports about their URLs availability, average response time, and total uptime/downtime.
 - Authenticated users can group their checks by tags and get reports by tag.
 
-## Acceptance Criteria
+## Decisions I took 
+
+### using linux CRON job over Nodejs setInterval()
+ - I think setInterval wouldn't be as accurate as the CRON job if the node main thread is busy with somthing else due the whole event loops life cycle, thus I delegate polling request every interval of time to a CRON which is more reliable and accurate and making use of linux OS 
+
+## Features
 
 - APIs should be consuming and producing `application/json`.
 - Authenication should be stateless.
