@@ -10,6 +10,8 @@ import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { EmailModule } from './email/email.module';
+import { PollingModule } from './polling/polling.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -17,7 +19,7 @@ import { EmailModule } from './email/email.module';
     // to retrieve its configuration variables
     ConfigModule.forRoot({ isGlobal: true }),
 
-    // here I choose to sget config vars through use factory so the order doesn't matter
+    // here I choose to get config vars through use factory so the order doesn't matter
     // because it's gonna always depend on the config service which will be resolved by nest runtime
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -33,11 +35,13 @@ import { EmailModule } from './email/email.module';
       }),
       inject: [ConfigService],
     }),
+    ScheduleModule.forRoot(),
     UsersModule,
     AuthModule,
     UrlChecksModule,
     ReportsModule,
     EmailModule,
+    PollingModule,
   ],
   controllers: [AppController],
   providers: [
