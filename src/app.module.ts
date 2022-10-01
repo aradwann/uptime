@@ -12,6 +12,7 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { EmailModule } from './email/email.module';
 import { PollingModule } from './polling/polling.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { UrlCheckSubscriber } from './url-checks/entities/subscribers/url-check.subscriber';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { ScheduleModule } from '@nestjs/schedule';
         password: configService.get('POSTGRES_PASSWORD'),
         database: configService.get('DATABASE_NAME'),
         autoLoadEntities: true,
+        // subscribers: [UrlCheckSubscriber],
         synchronize: true, // remove this in production, it may lead to loss of data
       }),
       inject: [ConfigService],

@@ -1,6 +1,9 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger } from '@nestjs/common';
 import { SchedulerRegistry } from '@nestjs/schedule';
+import { Status } from 'src/reports/entities/report.entity';
+import { ReportsService } from 'src/reports/reports.service';
+import { Protocol } from 'src/url-checks/entities/url-check.entity';
 
 /**
  * TODO:
@@ -17,23 +20,40 @@ export class PollingService {
   constructor(
     private schedulerRegistry: SchedulerRegistry,
     private httpService: HttpService,
+    private reportService: ReportsService,
   ) {
-    this.addInterval('myCrooooooooooon', 20_000);
+    // this.addInterval(
+    //   'myCrooooooooooon',
+    //   20_000,
+    //   Protocol.HTTP,
+    //   'www.twitter.com',
+    // );
     // setTimeout(() => {
     //   this.deleteInterval('myCrooooooooooon');
     // }, 60_000);
   }
 
-  addInterval(name: string, milliseconds: number) {
-    const callback = async () => {
+  addInterval(
+    name: string,
+    milliseconds: number,
+    protocol: Protocol,
+    url: string,
+  ) {
+    const callback = () => {
+      this.logger.warn(
+        `cron job with name ${name} and interval ${milliseconds} and protocol ${protocol} and url ${url}`,
+      );
       const start = Date.now();
-      const res = await this.httpService.get('https://www.twitter.com');
-      console.log({ res });
-
-      const millis = Date.now() - start;
-
-      this.logger.warn(`Interval ${name} executing at time (${milliseconds})!\
-       and the respose time is ${millis} millisecond `);
+      const res = this.httpService
+        .get(`${protocol}://${url}`)
+        .subscribe((res) => {
+          const millis = Date.now() - start;
+          if (res.status >= 200 && res.status < 300) {
+            this.reportService.createLog(Status.UP, millis);
+          } else {
+            this.reportService.createLog(Status.DOWN);
+          }
+        });
     };
 
     const interval = setInterval(callback, milliseconds);

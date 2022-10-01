@@ -2,10 +2,12 @@ import { Module } from '@nestjs/common';
 import { PollingService } from './polling.service';
 import { PollingController } from './polling.controller';
 import { HttpModule } from '@nestjs/axios';
+import { ReportsModule } from 'src/reports/reports.module';
 
 @Module({
-  imports: [HttpModule],
+  imports: [HttpModule, ReportsModule],
   controllers: [PollingController],
   providers: [PollingService],
+  exports: [PollingService],
 })
 export class PollingModule {}

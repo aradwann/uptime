@@ -6,12 +6,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Tag } from './entities/tag.entity';
 import { Authentication } from './entities/authentication.entity';
 import { HttpHeader } from './entities/httphHeader.entity';
+import { PollingModule } from 'src/polling/polling.module';
+import { UrlCheckSubscriber } from './entities/subscribers/url-check.subscriber';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([UrlCheck, Tag, Authentication, HttpHeader]),
+    PollingModule,
   ],
   controllers: [UrlChecksController],
-  providers: [UrlChecksService],
+  providers: [UrlChecksService, UrlCheckSubscriber],
 })
 export class UrlChecksModule {}
