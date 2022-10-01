@@ -49,7 +49,7 @@ export class UrlCheckSubscriber implements EntitySubscriberInterface<UrlCheck> {
   /**
    * Called after entity removal.
    */
-  afterRemove(event: RemoveEvent<UrlCheck>): void | Promise<any> {
+  beforeRemove(event: RemoveEvent<UrlCheck>) {
     const urlCheck = event.entity;
     this.pollingService.deleteInterval(`${urlCheck.id}`);
   }

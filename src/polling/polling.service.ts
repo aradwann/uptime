@@ -73,8 +73,12 @@ export class PollingService {
    * @param name name of the interval cron job
    */
   deleteInterval(name: string) {
-    console.log({ name });
-    this.schedulerRegistry.deleteInterval(name);
-    this.logger.warn(`Interval ${name} deleted!`);
+    const intervals = this.schedulerRegistry.getIntervals();
+    if (name in intervals) {
+      this.schedulerRegistry.deleteInterval(name);
+      this.logger.warn(`Interval ${name} deleted!`);
+    } else {
+      this.logger.warn(`Interval ${name} not found!`);
+    }
   }
 }
