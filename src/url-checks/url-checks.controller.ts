@@ -13,11 +13,15 @@ import { UpdateUrlCheckDto } from './dto/update-url-check.dto';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { User } from 'src/users/entities/user.entity';
 import { ApiTags } from '@nestjs/swagger';
+import { ReportsService } from 'src/reports/reports.service';
 
 @ApiTags('UrlCheck')
 @Controller('url-checks')
 export class UrlChecksController {
-  constructor(private readonly urlChecksService: UrlChecksService) {}
+  constructor(
+    private readonly urlChecksService: UrlChecksService,
+    private readonly reportService: ReportsService,
+  ) {}
 
   @Post()
   create(
@@ -48,5 +52,11 @@ export class UrlChecksController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.urlChecksService.remove(+id);
+  }
+
+  @Get(':id/report')
+  async getReport(@Param('id') id: number) {
+    const urlcheck = await this.urlChecksService.findOne(id);
+    return this.reportService.getReport(urlcheck);
   }
 }

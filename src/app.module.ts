@@ -12,7 +12,7 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { EmailModule } from './email/email.module';
 import { PollingModule } from './polling/polling.module';
 import { ScheduleModule } from '@nestjs/schedule';
-import { UrlCheckSubscriber } from './url-checks/entities/subscribers/url-check.subscriber';
+// import { UrlCheckSubscriber } from './url-checks/entities/subscribers/url-check.subscriber';
 
 @Module({
   imports: [

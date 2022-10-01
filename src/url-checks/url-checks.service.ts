@@ -1,11 +1,11 @@
-import { Header, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateUrlCheckDto } from './dto/create-url-check.dto';
 import { UpdateUrlCheckDto } from './dto/update-url-check.dto';
-import { Authentication } from './entities/authentication.entity';
-import { HttpHeader } from './entities/httphHeader.entity';
+// import { Authentication } from './entities/authentication.entity';
+// import { HttpHeader } from './entities/httphHeader.entity';
 import { Tag } from './entities/tag.entity';
 import { UrlCheck } from './entities/url-check.entity';
 

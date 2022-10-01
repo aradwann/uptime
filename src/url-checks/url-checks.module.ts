@@ -8,11 +8,13 @@ import { Authentication } from './entities/authentication.entity';
 import { HttpHeader } from './entities/httphHeader.entity';
 import { PollingModule } from 'src/polling/polling.module';
 import { UrlCheckSubscriber } from './entities/subscribers/url-check.subscriber';
+import { ReportsModule } from 'src/reports/reports.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([UrlCheck, Tag, Authentication, HttpHeader]),
     PollingModule,
+    ReportsModule,
   ],
   controllers: [UrlChecksController],
   providers: [UrlChecksService, UrlCheckSubscriber],

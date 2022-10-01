@@ -1,8 +1,10 @@
 import { IsEnum, IsNumber } from 'class-validator';
+import { UrlCheck } from 'src/url-checks/entities/url-check.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Status } from './report.entity';
@@ -35,4 +37,9 @@ export class Log {
 
   @CreateDateColumn()
   createdDate: Date;
+
+  @ManyToOne(() => UrlCheck, (urlcheck) => urlcheck.logs, {
+    onDelete: 'CASCADE',
+  })
+  urlCheck: UrlCheck;
 }

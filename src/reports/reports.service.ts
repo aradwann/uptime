@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { UrlCheck } from 'src/url-checks/entities/url-check.entity';
 import { Repository } from 'typeorm';
 
 import { Log } from './entities/log.entity';
-import { Report, Status } from './entities/report.entity';
+import { Status } from './entities/report.entity';
 
 @Injectable()
 export class ReportsService {
@@ -20,46 +21,70 @@ export class ReportsService {
     return `This action returns a #${id} report`;
   }
 
-  createLog(status: Status, responseTime?: number) {
+  createLog(urlcheck: UrlCheck, status: Status, responseTime?: number) {
     let log;
     if (responseTime) {
       log = new Log(status, responseTime);
     } else {
       log = new Log(status);
     }
+    log.urlCheck = urlcheck;
 
     return this.logRepo.save(log);
   }
-  async queryLogValues() {
-    const [upLogs, upCount] = await this.logRepo.findAndCountBy({
-      status: Status.UP,
-    });
 
-    const [downLogs, downCount] = await this.logRepo.findAndCountBy({
-      status: Status.DOWN,
-    });
+  async getStatusCount(urlCheck: UrlCheck, status: Status) {
+    return await this.logRepo
+      .createQueryBuilder('log')
+      .leftJoin('log.urlCheck', 'urlCheck')
+      .where('log.urlCheck = :urlCheckId', { urlCheckId: urlCheck.id })
+      .andWhere('log.status = :status', { status })
+      .getCount();
+  }
+  async queryLogValues(urlCheck: UrlCheck) {
+    const upCount = await this.getStatusCount(urlCheck, Status.UP);
+
+    const downCount = await this.getStatusCount(urlCheck, Status.DOWN);
+
+    const uptime = upCount * urlCheck.interval;
+    const downtime = downCount * urlCheck.interval;
 
     const availability = (upCount / (downCount + upCount)) * 100;
 
-    const { status } = await this.logRepo
+    const latestLog = await this.logRepo
       .createQueryBuilder('log')
-      .select('log.status', 'status')
-      .orderBy('id', 'DESC')
-      .limit(1)
-      .getRawOne();
+      .leftJoin('log.urlCheck', 'urlCheck')
+      .where('log.urlCheck = :urlCheckId', { urlCheckId: urlCheck.id })
+      .orderBy({ 'log.createdDate': 'DESC' })
+      .getOne();
+
+    const logs = await this.logRepo
+      .createQueryBuilder('log')
+      .leftJoin('log.urlCheck', 'urlCheck')
+      .where('log.urlCheck = :urlCheckId', { urlCheckId: urlCheck.id })
+      .getMany();
 
     const { avgResponseTime } = await this.logRepo
       .createQueryBuilder('log')
+      .leftJoin('log.urlCheck', 'urlCheck')
       .select('AVG(log.responseTime)', 'avgResponseTime')
-      .where('log.responseTime IS NOT NULL')
+      .where('log.urlCheck = :urlCheckId', { urlCheckId: urlCheck.id })
+      .andWhere('log.responseTime IS NOT NULL')
       .getRawOne();
 
-    return { upCount, downCount, availability, status, avgResponseTime };
+    return {
+      status: latestLog.status,
+      availability,
+      outages: downCount,
+      downtime,
+      uptime,
+      responseTime: avgResponseTime,
+      histroy: logs,
+    };
   }
 
-  async getReport() {
-    // const report = new Report(this.logRepo);
-    const reportVals = await this.queryLogValues();
+  async getReport(urlCheck: UrlCheck) {
+    const reportVals = await this.queryLogValues(urlCheck);
     console.log(reportVals);
     return reportVals;
   }

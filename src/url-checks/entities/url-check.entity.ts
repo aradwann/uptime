@@ -1,3 +1,4 @@
+import { Log } from 'src/reports/entities/log.entity';
 import { User } from 'src/users/entities/user.entity';
 import {
   Column,
@@ -105,4 +106,7 @@ export class UrlCheck {
 
   @ManyToOne(() => User, (user) => user.urlChecks)
   creator: User;
+
+  @OneToMany(() => Log, (log) => log.urlCheck)
+  logs: Log[];
 }

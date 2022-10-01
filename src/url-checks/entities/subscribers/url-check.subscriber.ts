@@ -2,10 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { InjectConnection } from '@nestjs/typeorm';
 import { PollingService } from 'src/polling/polling.service';
 import {
-  EventSubscriber,
+  // EventSubscriber,
   EntitySubscriberInterface,
   InsertEvent,
   Connection,
+  RemoveEvent,
 } from 'typeorm';
 import { UrlCheck } from '../url-check.entity';
 
@@ -31,13 +32,6 @@ export class UrlCheckSubscriber implements EntitySubscriberInterface<UrlCheck> {
   }
 
   /**
-   * Called before urlCheck insertion.
-   */
-  beforeInsert(event: InsertEvent<UrlCheck>) {
-    console.log(`BEFORE UrlCheck INSERTED: `, event.entity);
-  }
-
-  /**
    * Called after entity insertion.
    */
   afterInsert(event: InsertEvent<UrlCheck>) {
@@ -48,6 +42,15 @@ export class UrlCheckSubscriber implements EntitySubscriberInterface<UrlCheck> {
       urlCheck.interval * 1000,
       urlCheck.protocol,
       urlCheck.url,
+      urlCheck,
     );
+  }
+
+  /**
+   * Called after entity removal.
+   */
+  afterRemove(event: RemoveEvent<UrlCheck>): void | Promise<any> {
+    const urlCheck = event.entity;
+    this.pollingService.deleteInterval(`${urlCheck.id}`);
   }
 }

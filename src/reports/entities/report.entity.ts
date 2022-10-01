@@ -1,7 +1,7 @@
-import { InjectRepository } from '@nestjs/typeorm';
+// import { InjectRepository } from '@nestjs/typeorm';
 import { IsEnum, IsNumber } from 'class-validator';
-import { Repository } from 'typeorm';
-import { Log } from './log.entity';
+// import { Repository } from 'typeorm';
+// import { Log } from './log.entity';
 
 export enum Status {
   UP = 'UP',
