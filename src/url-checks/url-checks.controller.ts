@@ -32,26 +32,36 @@ export class UrlChecksController {
   }
 
   @Get()
-  findAll() {
-    return this.urlChecksService.findAll();
+  findAll(@CurrentUser() user: User) {
+    return this.urlChecksService.findAll(user);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: number) {
-    return this.urlChecksService.findOne(id);
+  async findOne(@Param('id') id: number, @CurrentUser() user: User) {
+    const urlCheck = await this.urlChecksService.findOne(id);
+
+    this.urlChecksService.checkIfUserIsCreatorOrThrowFobidden(urlCheck, user);
+    return urlCheck;
   }
 
   @Patch(':id')
-  update(
-    @Param('id') id: string,
+  async update(
+    @Param('id') id: number,
     @Body() updateUrlCheckDto: UpdateUrlCheckDto,
+    @CurrentUser() user: User,
   ) {
+    const urlCheck = await this.urlChecksService.findOne(id);
+
+    this.urlChecksService.checkIfUserIsCreatorOrThrowFobidden(urlCheck, user);
     return this.urlChecksService.update(+id, updateUrlCheckDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.urlChecksService.remove(+id);
+  async remove(@Param('id') id: number, @CurrentUser() user: User) {
+    const urlCheck = await this.urlChecksService.findOne(id);
+
+    this.urlChecksService.checkIfUserIsCreatorOrThrowFobidden(urlCheck, user);
+    return this.urlChecksService.remove(id);
   }
 
   @Get(':id/report')

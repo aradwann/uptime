@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
@@ -40,12 +44,24 @@ export class UrlChecksService {
     return this.urlCheckRepo.save(urlCheck);
   }
 
-  findAll() {
-    return this.urlCheckRepo.find();
+  async findAll(user: User) {
+    const urlChecks = await this.urlCheckRepo.find({
+      where: { creator: { id: user.id } },
+      relations: { creator: true },
+    });
+
+    return urlChecks;
   }
 
-  findOne(id: number) {
-    return this.urlCheckRepo.findOneBy({ id });
+  async findOne(id: number) {
+    const urlCheck = await this.urlCheckRepo.findOne({
+      where: { id },
+      relations: { creator: true },
+    });
+    if (!urlCheck) {
+      throw new NotFoundException('urlCheck not found');
+    }
+    return urlCheck;
   }
 
   update(id: number, updateUrlCheckDto: UpdateUrlCheckDto) {
@@ -56,5 +72,13 @@ export class UrlChecksService {
     const user = await this.findOne(id);
 
     return this.urlCheckRepo.remove(user);
+  }
+
+  checkIfUserIsCreatorOrThrowFobidden(urlCheck: UrlCheck, user: User) {
+    if (urlCheck.creator.id !== user.id) {
+      throw new ForbiddenException(
+        'Only the check creator can read or modify it ',
+      );
+    }
   }
 }

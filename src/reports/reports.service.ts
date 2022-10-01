@@ -85,7 +85,6 @@ export class ReportsService {
 
   async getReport(urlCheck: UrlCheck) {
     const reportVals = await this.queryLogValues(urlCheck);
-    console.log(reportVals);
     return reportVals;
   }
 }
