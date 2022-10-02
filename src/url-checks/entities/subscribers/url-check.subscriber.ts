@@ -36,14 +36,7 @@ export class UrlCheckSubscriber implements EntitySubscriberInterface<UrlCheck> {
    */
   afterInsert(event: InsertEvent<UrlCheck>) {
     const urlCheck = event.entity;
-    console.log(`AFTER ENTITY INSERTED: `, urlCheck);
-    this.pollingService.addInterval(
-      `${urlCheck.id}`,
-      urlCheck.interval * 1000,
-      urlCheck.protocol,
-      urlCheck.url,
-      urlCheck,
-    );
+    this.pollingService.addInterval(urlCheck);
   }
 
   /**

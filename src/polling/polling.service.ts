@@ -3,8 +3,8 @@ import { Injectable, Logger } from '@nestjs/common';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { Status } from 'src/reports/entities/report.entity';
 import { ReportsService } from 'src/reports/reports.service';
-import { Protocol, UrlCheck } from 'src/url-checks/entities/url-check.entity';
-
+import { UrlCheck } from 'src/url-checks/entities/url-check.entity';
+import * as https from 'https';
 /**
  * TODO:
  * WORKFLOW A
@@ -31,41 +31,60 @@ export class PollingService {
     private reportService: ReportsService,
   ) {}
 
+  getPollingRequest(urlCheck: UrlCheck) {
+    const agent = new https.Agent({
+      rejectUnauthorized: !urlCheck.ignoreSSL,
+    });
+
+    const start = Date.now();
+    return this.httpService
+      .get(`${urlCheck.protocol}://${urlCheck.url}`, {
+        baseURL: urlCheck.url,
+        url: urlCheck.path,
+        // auth: {
+        //   username: urlCheck.authentication.username,
+        //   password: urlCheck.authentication.password,
+        // },
+        timeout: urlCheck.timeout * 1000,
+        httpsAgent: agent,
+      })
+      .subscribe((res) => {
+        const millis = Date.now() - start;
+        if (res.status === urlCheck.assertStatusCode) {
+          this.reportService.createLog(urlCheck, Status.UP, millis);
+        } else {
+          this.reportService.createLog(urlCheck, Status.DOWN);
+        }
+      });
+  }
+
   /**
    * this created a cron job that's running each interval of time
    * this cron job is doing a polling request and insert a log in the database with its result
    * @param name name of the interval cron job
-   * @param milliseconds interval amount of time
+   * @param milliseconds interval amount of time in milliseconds
    * @param protocol protocol used in polling request
    * @param url url requested
+   * @param timeout request timeout in milliseconds
    * @param urlCheck urlCheck entity that sets up this cron job
+   * @param path the path after that base url
+   * @param username authentication username
+   * @param password authentication password
+   * @param assertStatusCode status code to assert against defaults to 200
+   * @param ignoreSSL ignore ssl defaults to false
    */
-  addInterval(
-    name: string,
-    milliseconds: number,
-    protocol: Protocol,
-    url: string,
-    urlCheck: UrlCheck,
-  ) {
+  addInterval(urlCheck: UrlCheck) {
     const callback = () => {
       this.logger.warn(
-        `cron job with name ${name} and interval ${milliseconds} and protocol ${protocol} and url ${url}`,
+        `cron job with name ${urlCheck.id} and interval ${
+          urlCheck.interval * 1000
+        } and protocol ${urlCheck.protocol} and url ${urlCheck.url}`,
       );
-      const start = Date.now();
-      const res = this.httpService
-        .get(`${protocol}://${url}`)
-        .subscribe((res) => {
-          const millis = Date.now() - start;
-          if (res.status >= 200 && res.status < 300) {
-            this.reportService.createLog(urlCheck, Status.UP, millis);
-          } else {
-            this.reportService.createLog(urlCheck, Status.DOWN);
-          }
-        });
+      this.getPollingRequest(urlCheck);
     };
 
-    const interval = setInterval(callback, milliseconds);
-    this.schedulerRegistry.addInterval(name, interval);
+    const interval = setInterval(callback, urlCheck.interval * 1000);
+    this.schedulerRegistry.addInterval(`${urlCheck.id}`, interval);
   }
 
   /**
