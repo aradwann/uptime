@@ -1,26 +1,51 @@
-FROM node:16-alpine AS development
+###################
+# BUILD FOR LOCAL DEVELOPMENT
+###################
+
+FROM node:18-alpine As development
+RUN npm i -g pnpm
 
 WORKDIR /usr/src/app
 
-COPY package*.json ./
+COPY pnpm-lock.yaml ./
 
-RUN npm install 
+RUN pnpm fetch --prod
+
+COPY . .
+RUN pnpm install
+
+USER node
+
+###################
+# BUILD FOR PRODUCTION
+###################
+
+FROM node:18-alpine As build
+RUN npm i -g pnpm
+
+WORKDIR /usr/src/app
+
+COPY pnpm-lock.yaml ./
+
+COPY --from=development /usr/src/app/node_modules ./node_modules
 
 COPY . .
 
-RUN npm run build
+RUN pnpm build
 
-FROM node:16-alpine AS production
+ENV NODE_ENV production
 
-ARG NODE_ENV=production
-ENV NODE_ENV=${NODE_ENV}
+RUN pnpm install --prod
 
-COPY package*.json ./
+USER node
 
-RUN npm install --omit=dev
+###################
+# PRODUCTION
+###################
 
-COPY . . 
+FROM node:18-alpine As production
 
-COPY --from=development /usr/src/app/dist ./dist
+COPY --from=build /usr/src/app/node_modules ./node_modules
+COPY --from=build /usr/src/app/dist ./dist
 
-CMD ["node", "dist/main"]
+CMD [ "node", "dist/main.js" ]

@@ -26,11 +26,11 @@ import { ScheduleModule } from '@nestjs/schedule';
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
-        host: configService.get('HOST'),
+        host: configService.get<string>('HOST'),
         port: +configService.get('DATABASE_PORT'),
-        username: configService.get('POSTGRES_USER'),
-        password: configService.get('POSTGRES_PASSWORD'),
-        database: configService.get('DATABASE_NAME'),
+        username: configService.get<string>('POSTGRES_USER'),
+        password: configService.get<string>('POSTGRES_PASSWORD'),
+        database: configService.get<string>('POSTGRES_DB'),
         autoLoadEntities: true,
         // subscribers: [UrlCheckSubscriber],
         synchronize: true, // remove this in production, it may lead to loss of data
