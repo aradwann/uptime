@@ -22,7 +22,7 @@ export class ReportsService {
   }
 
   createLog(urlcheck: UrlCheck, status: Status, responseTime?: number) {
-    let log;
+    let log: Log;
     if (responseTime) {
       log = new Log(status, responseTime);
     } else {
