@@ -14,7 +14,6 @@ RUN pnpm fetch --prod
 COPY . .
 RUN pnpm install
 
-USER node
 
 ###################
 # BUILD FOR PRODUCTION
@@ -35,9 +34,8 @@ RUN pnpm build
 
 ENV NODE_ENV production
 
-RUN pnpm install --prod
+RUN pnpm install -r --offline --prod
 
-USER node
 
 ###################
 # PRODUCTION

@@ -1,10 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { EmailModule } from 'src/email/email.module';
+import { User } from 'src/users/entities/user.entity';
+import { UsersService } from 'src/users/users.service';
 import { Repository } from 'typeorm';
-import { User } from './entities/user.entity';
-import { UsersController } from './users.controller';
-import { UsersService } from './users.service';
 
 export type MockType<T> = {
   [P in keyof T]?: jest.Mock<object>;
@@ -17,14 +16,13 @@ export const repositoryMockFactory: () => MockType<Repository<any>> = jest.fn(
   }),
 );
 
-describe('UsersController', () => {
-  let controller: UsersController;
+describe('UsersService', () => {
+  let service: UsersService;
   let repositoryMock: MockType<Repository<User>>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [EmailModule],
-      controllers: [UsersController],
       providers: [
         UsersService,
         {
@@ -34,10 +32,11 @@ describe('UsersController', () => {
       ],
     }).compile();
 
-    controller = module.get<UsersController>(UsersController);
+    service = module.get<UsersService>(UsersService);
+    repositoryMock = module.get(getRepositoryToken(User));
   });
 
   it('should be defined', () => {
-    expect(controller).toBeDefined();
+    expect(service).toBeDefined();
   });
 });
