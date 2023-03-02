@@ -1,5 +1,6 @@
 # Uptime
-
+![Nodejs workflow](https://github.com/aradwann/uptime/actions/workflows/node.js.yml/badge.svg)
+[![Coverage Status](https://coveralls.io/repos/github/aradwann/uptime/badge.svg?branch=main)](https://coveralls.io/github/aradwann/uptime?branch=main)
 ## Description
 
 monitoring RESTful API server that allows authenticated users to monitor URLs, and get detailed uptime reports about their availability, average response time, and total uptime/downtime.
