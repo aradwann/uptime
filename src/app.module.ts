@@ -12,13 +12,15 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { EmailModule } from './email/email.module';
 import { PollingModule } from './polling/polling.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { validate } from './config/env.validation';
+import { envFilePath } from './config/configuration';
 // import { UrlCheckSubscriber } from './url-checks/entities/subscribers/url-check.subscriber';
 
 @Module({
   imports: [
     // first setup configure module because the following modules depends on it
     // to retrieve its configuration variables
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({ isGlobal: true, validate, envFilePath }),
 
     // here I choose to get config vars through use factory so the order doesn't matter
     // because it's gonna always depend on the config service which will be resolved by nest runtime

@@ -51,42 +51,33 @@ monitoring RESTful API server that allows authenticated users to monitor URLs, a
   - `history`: Timestamped logs of the polling requests.
 
 
-## Installation via docker
+## Run Local Development environment via docker
 
 ```bash
-$ docker-compose up
+$ docker compose --env-file .env.dev up
 ```
 
-## Installation without docker
+## Running e2e tests 
+requires `pnpm` and `docker`
+
+1) it spawns a test db container
+2) create a an instance of the app 
+3) run e2e tests 
+4) close/destory the app
+5) teardown test db
 
 ```bash
-$ npm install
-```
-
-## Running the app
-
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+$ pnpm test:e2e
 ```
 
 ## Test
 
 ```bash
 # unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
+$ pnpm run test
 
 # test coverage
-$ npm run test:cov
+$ pnpm run test:cov
 ```
 
 ## Swagger (OpenAPI) documentation 
