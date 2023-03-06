@@ -14,7 +14,7 @@ import { PollingModule } from './components/polling/polling.module';
 import { ReportsModule } from './components/reports/reports.module';
 import { UrlChecksModule } from './components/url-checks/url-checks.module';
 import { UsersModule } from './components/users/users.module';
-// import { BullModule } from '@nestjs/bullmq';
+import { BullModule } from '@nestjs/bullmq';
 
 // import { UrlCheckSubscriber } from './url-checks/entities/subscribers/url-check.subscriber';
 
@@ -41,16 +41,16 @@ import { UsersModule } from './components/users/users.module';
       }),
       inject: [ConfigService],
     }),
-    // BullModule.forRootAsync({
-    //   imports: [ConfigModule],
-    //   useFactory: (configService: ConfigService) => ({
-    //     connection: {
-    //       host: configService.get<string>('REDIS_HOST'),
-    //       port: +configService.get('REDIS_PORT'),
-    //     },
-    //   }),
-    //   inject: [ConfigService],
-    // }),
+    BullModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        connection: {
+          host: configService.get<string>('REDIS_HOST'),
+          port: +configService.get('REDIS_PORT'),
+        },
+      }),
+      inject: [ConfigService],
+    }),
     ScheduleModule.forRoot(),
     UsersModule,
     AuthModule,

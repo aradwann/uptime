@@ -54,6 +54,22 @@ describe('UsersController (e2e)', () => {
     });
   });
 
+  describe('/auth/login (POST) authenticate user', () => {
+    it('login successfully', () => {
+      return request(app.getHttpServer())
+        .post('/auth/login')
+        .send({ email: 'test@email.com', password: 'test-password' })
+        .expect(200);
+    });
+
+    it('login unsuccessful', () => {
+      return request(app.getHttpServer())
+        .post('/auth/login')
+        .send({ email: 'test@email.com', password: 'testpassword' })
+        .expect(401);
+    });
+  });
+
   // describe('/users (GET) get all users', () => {
   //   it('get all users successfully', () => {
   //     let body: request.Response;
