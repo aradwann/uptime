@@ -14,6 +14,8 @@ import { PollingModule } from './components/polling/polling.module';
 import { ReportsModule } from './components/reports/reports.module';
 import { UrlChecksModule } from './components/url-checks/url-checks.module';
 import { UsersModule } from './components/users/users.module';
+// import { BullModule } from '@nestjs/bullmq';
+
 // import { UrlCheckSubscriber } from './url-checks/entities/subscribers/url-check.subscriber';
 
 @Module({
@@ -28,8 +30,8 @@ import { UsersModule } from './components/users/users.module';
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
-        host: configService.get<string>('HOST'),
-        port: +configService.get('DATABASE_PORT'),
+        host: configService.get<string>('POSTGRES_HOST'),
+        port: +configService.get('POSTGRES_PORT'),
         username: configService.get<string>('POSTGRES_USER'),
         password: configService.get<string>('POSTGRES_PASSWORD'),
         database: configService.get<string>('POSTGRES_DB'),
@@ -39,6 +41,16 @@ import { UsersModule } from './components/users/users.module';
       }),
       inject: [ConfigService],
     }),
+    // BullModule.forRootAsync({
+    //   imports: [ConfigModule],
+    //   useFactory: (configService: ConfigService) => ({
+    //     connection: {
+    //       host: configService.get<string>('REDIS_HOST'),
+    //       port: +configService.get('REDIS_PORT'),
+    //     },
+    //   }),
+    //   inject: [ConfigService],
+    // }),
     ScheduleModule.forRoot(),
     UsersModule,
     AuthModule,

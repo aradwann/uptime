@@ -1,7 +1,6 @@
 services:
 
   backend:
-    env_file: .env.dev
     container_name: backend
     build:
       context: .
@@ -16,6 +15,7 @@ services:
 
     depends_on:
       - postgres
+      - redis
     networks:
       - backend
 
@@ -28,9 +28,17 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
       PG_DATA: /var/lib/postgresql/data
     ports:
-      - ${DATABASE_PORT}:${DATABASE_PORT}
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
     volumes:
       - pgdata:/var/lib/postgresql/data
+    networks:
+      - backend
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    ports:
+      - ${REDIS_PORT}:${REDIS_PORT}
     networks:
       - backend
 
