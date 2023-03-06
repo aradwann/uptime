@@ -17,9 +17,9 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:setup": "export NODE_ENV=test && docker compose --env-file .env.test -f docker-compose.test.yml up -d ",
-    "test:teardown": "docker compose --env-file .env.test -f docker-compose.test.yml down",
-    "test:e2e": "pnpm test:setup && jest --config ./test/jest-e2e.json && pnpm test:teardown",
+    "test:setup": "export NODE_ENV=test && docker compose --env-file .env.test -p uptime-test -f docker-compose.test.yml up -d ",
+    "test:teardown": "docker compose --env-file .env.test -p uptime-test -f docker-compose.test.yml down",
+    "test:e2e": "pnpm test:setup && jest --detectOpenHandles --config ./test/jest-e2e.json && pnpm test:teardown",
     "test:e2e-cov": "pnpm test:setup && jest --coverage --config ./test/jest-e2e.json && pnpm test:teardown"
   },
   "dependencies": {
