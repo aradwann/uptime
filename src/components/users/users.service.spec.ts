@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { EmailModule } from 'src/email/email.module';
-import { User } from 'src/users/entities/user.entity';
-import { UsersService } from 'src/users/users.service';
 import { Repository } from 'typeorm';
+import { EmailModule } from '../email/email.module';
+import { User } from './entities/user.entity';
+import { UsersService } from './users.service';
 
 export type MockType<T> = {
   [P in keyof T]?: jest.Mock<object>;

@@ -1,19 +1,19 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UsersModule } from './users/users.module';
-import { UrlChecksModule } from './url-checks/url-checks.module';
-import { ReportsModule } from './reports/reports.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthModule } from './auth/auth.module';
+import { AuthModule } from './components/auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
-import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
-import { EmailModule } from './email/email.module';
-import { PollingModule } from './polling/polling.module';
+import { JwtAuthGuard } from './components/auth/guards/jwt-auth.guard';
 import { ScheduleModule } from '@nestjs/schedule';
 import { validate } from './config/env.validation';
 import { envFilePath } from './config/configuration';
+import { EmailModule } from './components/email/email.module';
+import { PollingModule } from './components/polling/polling.module';
+import { ReportsModule } from './components/reports/reports.module';
+import { UrlChecksModule } from './components/url-checks/url-checks.module';
+import { UsersModule } from './components/users/users.module';
 // import { UrlCheckSubscriber } from './url-checks/entities/subscribers/url-check.subscriber';
 
 @Module({

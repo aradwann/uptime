@@ -5,9 +5,9 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
-import { EmailService } from 'src/email/email.service';
 import { Repository } from 'typeorm';
+import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
+import { EmailService } from '../email/email.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';

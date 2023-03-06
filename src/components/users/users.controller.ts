@@ -14,9 +14,9 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 import { ApiNotFoundResponse, ApiTags } from '@nestjs/swagger';
-import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
+import { CurrentUser } from 'src/components/auth/decorators/current-user.decorator';
 import { User } from './entities/user.entity';
-import { Public } from 'src/auth/decorators/public.decorator';
+import { Public } from 'src/components/auth/decorators/public.decorator';
 
 @ApiTags('users')
 @Controller('users')

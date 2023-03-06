@@ -10,10 +10,10 @@ import {
 import { UrlChecksService } from './url-checks.service';
 import { CreateUrlCheckDto } from './dto/create-url-check.dto';
 import { UpdateUrlCheckDto } from './dto/update-url-check.dto';
-import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
-import { User } from 'src/users/entities/user.entity';
+import { CurrentUser } from 'src/components/auth/decorators/current-user.decorator';
 import { ApiTags } from '@nestjs/swagger';
-import { ReportsService } from 'src/reports/reports.service';
+import { ReportsService } from '../reports/reports.service';
+import { User } from '../users/entities/user.entity';
 
 @ApiTags('UrlCheck')
 @Controller('url-checks')

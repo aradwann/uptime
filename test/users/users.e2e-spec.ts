@@ -3,8 +3,8 @@ import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from 'src/app.module';
 import { Repository } from 'typeorm';
-import { User } from 'src/users/entities/user.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { User } from 'src/components/users/entities/user.entity';
 
 describe('UsersController (e2e)', () => {
   let app: INestApplication;

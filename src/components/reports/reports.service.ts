@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UrlCheck } from 'src/url-checks/entities/url-check.entity';
 import { Repository } from 'typeorm';
-
+import { UrlCheck } from '../url-checks/entities/url-check.entity';
 import { Log } from './entities/log.entity';
 import { Status } from './entities/report.entity';
 

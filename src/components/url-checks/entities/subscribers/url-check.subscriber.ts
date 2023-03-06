@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectConnection } from '@nestjs/typeorm';
-import { PollingService } from 'src/polling/polling.service';
+import { PollingService } from 'src/components/polling/polling.service';
 import {
   // EventSubscriber,
   EntitySubscriberInterface,

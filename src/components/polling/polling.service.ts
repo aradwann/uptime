@@ -1,10 +1,10 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger } from '@nestjs/common';
 import { SchedulerRegistry } from '@nestjs/schedule';
-import { Status } from 'src/reports/entities/report.entity';
-import { ReportsService } from 'src/reports/reports.service';
-import { UrlCheck } from 'src/url-checks/entities/url-check.entity';
 import * as https from 'https';
+import { Status } from '../reports/entities/report.entity';
+import { ReportsService } from '../reports/reports.service';
+import { UrlCheck } from '../url-checks/entities/url-check.entity';
 /**
  * TODO:
  * WORKFLOW A

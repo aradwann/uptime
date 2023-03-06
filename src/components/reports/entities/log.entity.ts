@@ -1,5 +1,5 @@
 import { IsEnum, IsNumber } from 'class-validator';
-import { UrlCheck } from 'src/url-checks/entities/url-check.entity';
+import { UrlCheck } from 'src/components/url-checks/entities/url-check.entity';
 import {
   Column,
   CreateDateColumn,

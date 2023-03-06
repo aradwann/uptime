@@ -4,8 +4,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
+import { User } from '../users/entities/user.entity';
 import { CreateUrlCheckDto } from './dto/create-url-check.dto';
 import { UpdateUrlCheckDto } from './dto/update-url-check.dto';
 // import { Authentication } from './entities/authentication.entity';

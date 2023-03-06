@@ -1,5 +1,5 @@
-import { Log } from 'src/reports/entities/log.entity';
-import { User } from 'src/users/entities/user.entity';
+import { Log } from 'src/components/reports/entities/log.entity';
+import { User } from 'src/components/users/entities/user.entity';
 import {
   Column,
   CreateDateColumn,

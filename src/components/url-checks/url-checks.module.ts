@@ -6,9 +6,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Tag } from './entities/tag.entity';
 import { Authentication } from './entities/authentication.entity';
 import { HttpHeader } from './entities/httphHeader.entity';
-import { PollingModule } from 'src/polling/polling.module';
 import { UrlCheckSubscriber } from './entities/subscribers/url-check.subscriber';
-import { ReportsModule } from 'src/reports/reports.module';
+import { PollingModule } from '../polling/polling.module';
+import { ReportsModule } from '../reports/reports.module';
 
 @Module({
   imports: [

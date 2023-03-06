@@ -9,7 +9,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { UrlCheck } from 'src/url-checks/entities/url-check.entity';
+import { UrlCheck } from 'src/components/url-checks/entities/url-check.entity';
 
 @Entity()
 export class User {
