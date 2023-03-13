@@ -6,17 +6,24 @@ import { Queue } from 'bullmq';
 export class JobQueueService {
   constructor(@InjectQueue('test') private testQueue: Queue) {}
 
-  async testTheQueue() {
+  async addRepeatableJob() {
     console.log('I am gonna test the queue');
     const job = await this.testQueue.add(
       'test',
       {
         ping: 'pong',
       },
-      { repeat: { every: 5000 } },
+      { repeat: { every: 5000 }, jobId: 'test1' },
     );
-    console.log(await this.testQueue.getRepeatableJobs());
 
-    this.testQueue.removeRepeatableByKey(job.repeatJobKey);
+    console.log({ job });
+    console.log({ queueJobs: await this.testQueue.getRepeatableJobs() });
+  }
+
+  async removeRepeatableJob() {
+    console.log('I am gonna remove the  repeatable test job from the queue');
+
+    this.testQueue.removeRepeatableByKey('test:test1:::5000');
+    console.log({ queueJobs: await this.testQueue.getRepeatableJobs() });
   }
 }
