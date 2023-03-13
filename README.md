@@ -55,12 +55,27 @@ monitoring RESTful API server that allows authenticated users to monitor URLs, a
 ## Run Local Development environment via docker
 
 ```bash
-$ docker compose --env-file .env.dev up
+docker compose --env-file .env.dev up
 ```
 
-## Running e2e tests 
+
+
+## Test
+
+### Running unit tests 
+
+```bash
+# unit tests
+ pnpm run test
+
+# test coverage
+ pnpm run test:cov
+```
+
+### Running e2e tests 
 requires `pnpm` and `docker`
 
+basically what running e2e tests do:
 1) it spawns a test db container
 2) create a an instance of the app 
 3) run e2e tests 
@@ -68,19 +83,8 @@ requires `pnpm` and `docker`
 5) teardown test db
 
 ```bash
-$ pnpm test:e2e
+ pnpm test:e2e
 ```
-
-## Test
-
-```bash
-# unit tests
-$ pnpm run test
-
-# test coverage
-$ pnpm run test:cov
-```
-
 ## Swagger (OpenAPI) documentation 
 
 accessed via the endpoint ` /api` 

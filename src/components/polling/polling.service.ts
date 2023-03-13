@@ -1,4 +1,6 @@
 import { HttpService } from '@nestjs/axios';
+import { InjectQueue } from '@nestjs/bullmq';
+import { Queue } from 'bullmq';
 import { Injectable, Logger } from '@nestjs/common';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import * as https from 'https';
@@ -26,6 +28,7 @@ export class PollingService {
   private readonly logger = new Logger(PollingService.name);
 
   constructor(
+    @InjectQueue('polling') private pollingQueue: Queue,
     private schedulerRegistry: SchedulerRegistry,
     private httpService: HttpService,
     private reportService: ReportsService,

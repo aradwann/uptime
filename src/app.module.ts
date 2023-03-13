@@ -17,6 +17,7 @@ import { UsersModule } from './components/users/users.module';
 import { BullModule } from '@nestjs/bullmq';
 
 // import { UrlCheckSubscriber } from './url-checks/entities/subscribers/url-check.subscriber';
+import { JobQueueModule } from './components/job-queue/job-queue.module';
 
 @Module({
   imports: [
@@ -58,6 +59,7 @@ import { BullModule } from '@nestjs/bullmq';
     ReportsModule,
     EmailModule,
     PollingModule,
+    JobQueueModule,
   ],
   controllers: [AppController],
   providers: [
