@@ -9,6 +9,7 @@ import { User } from 'src/components/users/entities/user.entity';
 describe('UsersController (e2e)', () => {
   let app: INestApplication;
   let usersRepository: Repository<User>;
+  let authToken: string;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -32,6 +33,10 @@ describe('UsersController (e2e)', () => {
     testUser.email = 'test@email.com';
     testUser.password = 'test-password';
     await usersRepository.save(testUser);
+    const response = await request(app.getHttpServer())
+      .post('/auth/login')
+      .send({ email: 'test@email.com', password: 'test-password' });
+    authToken = response.body.access_token;
   });
 
   afterEach(async () => {
@@ -55,11 +60,13 @@ describe('UsersController (e2e)', () => {
   });
 
   describe('/auth/login (POST) authenticate user', () => {
-    it('login successfully', () => {
-      return request(app.getHttpServer())
+    it('login successfully', async () => {
+      const response = await request(app.getHttpServer())
         .post('/auth/login')
-        .send({ email: 'test@email.com', password: 'test-password' })
-        .expect(200);
+        .send({ email: 'test@email.com', password: 'test-password' });
+
+      expect(response.status).toEqual(200);
+      expect(response.body.access_token).toBeTruthy();
     });
 
     it('login unsuccessful', () => {
@@ -70,22 +77,25 @@ describe('UsersController (e2e)', () => {
     });
   });
 
-  // describe('/users (GET) get all users', () => {
-  //   it('get all users successfully', () => {
-  //     let body: request.Response;
-  //     request(app.getHttpServer())
-  //       .post('/auth/login')
-  //       .send({ email: 'test@email.com', password: 'test-password' })
-  //       .end((err, res) => {
-  //         if (err) console.log(err);
-  //         body = res;
-  //         console.log(body);
-  //       });
+  describe('/users (GET) get all users', () => {
+    it('get all users successfully', async () => {
+      const response = await request(app.getHttpServer())
+        .get('/users')
+        .set('Authorization', 'bearer ' + authToken);
 
-  //     return request(app.getHttpServer())
-  //       .post('/users')
-  //       .send({ email: 'test@email.com', password: 'test-password' })
-  //       .expect(400);
-  //   });
-  // });
+      expect(response.status).toEqual(200);
+      expect(response.body.length).toEqual(1);
+    });
+  });
+
+  describe('/me (GET) get user profile', () => {
+    it('get all users successfully', async () => {
+      const response = await request(app.getHttpServer())
+        .get('/users/me')
+        .set('Authorization', 'bearer ' + authToken);
+
+      expect(response.status).toEqual(200);
+      expect(response.body.email).toEqual('test@email.com');
+    });
+  });
 });
